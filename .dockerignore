@@ -1,0 +1,16 @@
+.git
+.gitignore
+.env
+.env.backup
+.env.production
+.phpunit.result.cache
+node_modules
+npm-debug.log
+yarn-error.log
+vendor
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/views/*
+storage/logs/*
+tests
+*.bat

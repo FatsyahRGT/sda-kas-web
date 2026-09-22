@@ -37,7 +37,7 @@
 
             <div>
                 <label for="nominal" class="block text-xs font-semibold text-slate-700 mb-1.5">Nominal Biaya (Rp) <span class="text-red-500">*</span></label>
-                <input type="number" name="nominal" id="nominal" value="{{ old('nominal', $expense->nominal) }}" min="1" step="500" required
+                <input type="number" name="nominal" id="nominal" value="{{ old('nominal', (int) $expense->nominal) }}" min="1" step="1" required
                     class="w-full rounded-xl border border-slate-300 px-3.5 py-2.5 text-sm font-bold text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 @error('nominal') border-red-400 @enderror">
             </div>
 

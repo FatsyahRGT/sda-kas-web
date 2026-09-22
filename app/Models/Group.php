@@ -24,7 +24,7 @@ class Group extends Model
     protected function casts(): array
     {
         return [
-            'default_due_amount' => 'decimal:2',
+            'default_due_amount' => 'integer',
             'is_public' => 'boolean',
         ];
     }

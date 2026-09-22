@@ -68,7 +68,7 @@ class AutomationApiTest extends TestCase
         ]);
 
         $response->assertStatus(201);
-        $response->assertJsonPath('data.nominal', '50000.00');
+        $response->assertJsonPath('data.nominal', 50000);
 
         $this->assertDatabaseHas('incomes', [
             'period_id' => $period->id,

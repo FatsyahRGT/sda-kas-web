@@ -22,7 +22,7 @@ class Income extends Model
     protected function casts(): array
     {
         return [
-            'nominal' => 'decimal:2',
+            'nominal' => 'integer',
             'transaction_date' => 'datetime',
         ];
     }

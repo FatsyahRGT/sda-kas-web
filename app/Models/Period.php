@@ -25,7 +25,7 @@ class Period extends Model
         return [
             'month' => 'integer',
             'year' => 'integer',
-            'due_amount' => 'decimal:2',
+            'due_amount' => 'integer',
         ];
     }
 

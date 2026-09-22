@@ -19,7 +19,7 @@ services:
       DB_CONNECTION: mysql
       DB_HOST: db
       DB_PORT: 3306
-      DB_DATABASE: myfinance_db
+      DB_DATABASE: sda_kas_web
       DB_USERNAME: frgtx
       DB_PASSWORD: asddsa123
       SESSION_DRIVER: database
@@ -65,7 +65,7 @@ services:
       - "3307:3306"
     environment:
       MYSQL_ROOT_PASSWORD: t3g4lr3j0
-      MYSQL_DATABASE: myfinance_db
+      MYSQL_DATABASE: sda_kas_web
       MYSQL_USER: frgtx
       MYSQL_PASSWORD: asddsa123
     volumes:

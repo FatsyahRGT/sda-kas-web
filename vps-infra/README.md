@@ -6,7 +6,7 @@
 - **SSH User**: `ubuntu`
 - **Direktori Aplikasi**: `~/web-apps/vps-infra` (atau `~/vps-infra`)
 - **MySQL Root Password**: `t3g4lr3j0`
-- **MySQL Database**: `myfinance_db`
+- **MySQL Database**: `sda_kas_web`
 - **MySQL User**: `frgtx`
 - **MySQL Password**: `asddsa123`
 - **MySQL Host Port**: `3307`

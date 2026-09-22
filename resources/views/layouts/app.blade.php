@@ -15,7 +15,23 @@
     {{-- Bootstrap Icons CDN --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- Tailwind CSS CDN --}}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Instrument Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+                    colors: { primary: '#2563eb', 'primary-dark': '#1d4ed8' }
+                }
+            }
+        }
+    </script>
+    <style>
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #94a3b8; border-radius: 9999px; }
+    </style>
 </head>
 <body class="h-full font-sans antialiased text-slate-800" x-data="{ sidebarOpen: false }">
 
@@ -176,6 +192,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }, true);
 
+    // Format nominal input as currency while typing
+    document.querySelectorAll('input[data-rupiah]').forEach(input => {
+        input.addEventListener('input', () => {
+            let val = input.value.replace(/\D/g, '');
+            input.value = val;
+        });
+    });
+
     // Flash notifications via SweetAlert Toast
     @if(session('success'))
         Swal.fire({
@@ -205,6 +229,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     @endif
 });
+
+// Service Worker Registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').catch((err) => {
+            console.warn('SW registration failed:', err);
+        });
+    });
+}
 </script>
 
 @stack('scripts')

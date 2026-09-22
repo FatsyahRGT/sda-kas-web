@@ -13,8 +13,18 @@
     
     {{-- SweetAlert2 --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- Tailwind CSS CDN --}}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Instrument Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+                    colors: { primary: '#2563eb', 'primary-dark': '#1d4ed8' }
+                }
+            }
+        }
+    </script>
 </head>
 <body class="min-h-full font-sans antialiased bg-slate-100 flex flex-col justify-center m-0 p-0 selection:bg-blue-600 selection:text-white">
     <div class="min-h-screen flex flex-col lg:flex-row w-full">

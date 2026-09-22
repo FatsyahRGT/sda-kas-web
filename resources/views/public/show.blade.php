@@ -10,8 +10,18 @@
     
     {{-- Bootstrap Icons --}}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
+    {{-- Tailwind CSS CDN --}}
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Instrument Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'] },
+                    colors: { primary: '#2563eb', 'primary-dark': '#1d4ed8' }
+                }
+            }
+        }
+    </script>
 </head>
 <body class="min-h-full font-sans antialiased text-slate-800 p-4 sm:p-6 md:p-8" x-data="{ modalPhoto: null }">
     <div class="max-w-5xl mx-auto">

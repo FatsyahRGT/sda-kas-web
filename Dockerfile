@@ -1,18 +1,5 @@
 # ==========================================
-# Stage 1: Build Frontend Assets (Vite)
-# ==========================================
-FROM node:20-alpine AS node_builder
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci
-
-COPY . .
-RUN npm run build
-
-# ==========================================
-# Stage 2: PHP-FPM Application
+# PHP-FPM Application (PHP 8.3 Alpine)
 # ==========================================
 FROM php:8.3-fpm-alpine
 
@@ -52,9 +39,6 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy application files
 COPY . /var/www
-
-# Copy built frontend assets from node_builder
-COPY --from=node_builder /app/public/build /var/www/public/build
 
 # Install PHP production dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction

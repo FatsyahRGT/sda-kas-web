@@ -123,9 +123,9 @@
                     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
                         <div>
                             <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                                <i class="bi bi-bar-chart-fill text-blue-600"></i> Tren Pemasukan vs Pengeluaran (Tutup Buku)
+                                <i class="bi bi-bar-chart-fill text-blue-600"></i> Tren Pemasukan vs Pengeluaran Bulanan
                             </h2>
-                            <p class="text-xs text-slate-500 mt-0.5">Riwayat arus kas per periode tutup buku</p>
+                            <p class="text-xs text-slate-500 mt-0.5">Perbandingan arus kas masuk dan kas keluar per periode</p>
                         </div>
                         <div class="flex items-center gap-2">
                             <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">

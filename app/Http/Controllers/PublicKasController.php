@@ -26,7 +26,7 @@ class PublicKasController extends Controller
             abort(404, 'Halaman publik kas ini tidak ditemukan atau bersifat privat.');
         }
 
-        // Only closed periods are visible to the public
+        // Only closed periods are listed for the formal monthly breakdown
         $closedPeriods = Period::where('group_id', $group->id)
             ->where('status', 'closed')
             ->orderBy('year', 'desc')
@@ -57,15 +57,25 @@ class PublicKasController extends Controller
             ]);
         }
 
-        // Summary metrics for the public group (from all closed periods)
-        $closedPeriodIds = $closedPeriods->pluck('id');
-        $totalIncome = (float) Income::whereIn('period_id', $closedPeriodIds)->sum('nominal');
-        $totalExpense = (float) Expense::whereIn('period_id', $closedPeriodIds)->sum('nominal');
+        // Realtime summary metrics for the group across all periods (matching admin dashboard)
+        $allGroupPeriods = Period::where('group_id', $group->id)
+            ->whereIn('status', ['open', 'closed'])
+            ->get();
+        $allPeriodIds = $allGroupPeriods->pluck('id');
+
+        $totalIncome = (float) Income::whereIn('period_id', $allPeriodIds)->sum('nominal');
+        $totalExpense = (float) Expense::whereIn('period_id', $allPeriodIds)->sum('nominal');
         $totalBalance = $totalIncome - $totalExpense;
         $totalMembers = Member::where('group_id', $group->id)->where('is_active', true)->count();
 
-        // Monthly trends for chart (up to last 12 closed periods, sorted chronologically)
-        $chartPeriods = $closedPeriods->sortBy(fn ($p) => sprintf('%04d%02d', $p->year, $p->month))->values()->take(12);
+        // Monthly trends for chart (realtime across periods up to 12)
+        $chartPeriods = Period::where('group_id', $group->id)
+            ->whereIn('status', ['open', 'closed'])
+            ->orderBy('year', 'asc')
+            ->orderBy('month', 'asc')
+            ->take(12)
+            ->get();
+
         $chartLabels = [];
         $chartIncome = [];
         $chartExpense = [];
@@ -76,8 +86,8 @@ class PublicKasController extends Controller
             $chartExpense[] = (float) $period->total_expense;
         }
 
-        // Category breakdown for doughnut chart
-        $categoryExpenses = Expense::whereIn('period_id', $closedPeriodIds)
+        // Category breakdown for doughnut chart (realtime across all periods)
+        $categoryExpenses = Expense::whereIn('period_id', $allPeriodIds)
             ->leftJoin('expense_categories', 'expenses.category_id', '=', 'expense_categories.id')
             ->selectRaw('COALESCE(expense_categories.name, "Tanpa Kategori") as name, SUM(expenses.nominal) as total')
             ->groupBy('expense_categories.id', 'expense_categories.name')

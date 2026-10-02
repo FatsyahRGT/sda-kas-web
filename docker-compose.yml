@@ -13,7 +13,7 @@ services:
       APP_NAME: "SDA Kas Web"
       APP_ENV: production
       APP_DEBUG: "false"
-      APP_URL: "http://43.157.243.62:8081"
+      APP_URL: "http://sumber-daya-air-sikas.duckdns.org:8081"
       LOG_CHANNEL: stack
       LOG_LEVEL: error
       DB_CONNECTION: mysql
@@ -34,6 +34,21 @@ services:
     depends_on:
       db:
         condition: service_healthy
+
+  # ==========================================
+  # DuckDNS Dynamic DNS Auto-Updater Service
+  # ==========================================
+  duckdns:
+    image: lscr.io/linuxserver/duckdns:latest
+    container_name: sda_kas_duckdns
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Jakarta
+      - SUBDOMAINS=sumber-daya-air-sikas
+      - TOKEN=${DUCKDNS_TOKEN}
+      - LOG_FILE=true
+    networks:
+      - sda_network
 
   # ==========================================
   # Web Server Service (Nginx)

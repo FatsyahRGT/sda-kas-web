@@ -97,26 +97,64 @@
 
         /* Kop Surat Resmi */
         .kop-surat {
-            text-align: center;
             border-bottom: 3px double #0f172a;
             padding-bottom: 12px;
             margin-bottom: 16px;
         }
-        .kop-surat h1 {
-            font-size: 15pt;
-            font-weight: 900;
+        .kop-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        .kop-logo {
+            width: 68px;
+            height: 68px;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .kop-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .kop-text {
+            flex: 1;
+            text-align: center;
+        }
+        .kop-text h3 {
+            font-size: 9pt;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 0 0 2px 0;
+            color: #475569;
+            text-transform: uppercase;
+        }
+        .kop-text h4 {
+            font-size: 10pt;
+            font-weight: 800;
             letter-spacing: 0.5px;
             margin: 0 0 4px 0;
+            color: #1e293b;
+            text-transform: uppercase;
+        }
+        .kop-text h1 {
+            font-size: 13pt;
+            font-weight: 900;
+            letter-spacing: 0.5px;
+            margin: 0 0 2px 0;
             text-transform: uppercase;
             color: #0f172a;
         }
-        .kop-surat h2 {
-            font-size: 12pt;
+        .kop-text h2 {
+            font-size: 11pt;
             font-weight: 700;
-            margin: 0 0 4px 0;
-            color: #334155;
+            margin: 0 0 3px 0;
+            color: #2563eb;
         }
-        .kop-surat p {
+        .kop-text p {
             margin: 0;
             font-size: 8.5pt;
             color: #64748b;
@@ -315,9 +353,21 @@
     <div class="page-container">
         {{-- Kop Surat Resmi --}}
         <div class="kop-surat">
-            <h1>Laporan Rekapitulasi Kas Keuangan</h1>
-            <h2>{{ strtoupper($period->group->name) }}</h2>
-            <p>Periode: <strong>{{ $period->period_name }}</strong> &bull; Status Tutup Buku: <strong>{{ strtoupper($period->status) }}</strong></p>
+            <div class="kop-container">
+                <div class="kop-logo">
+                    <img src="{{ asset('images/jayaraya.png') }}" alt="Logo Jaya Raya">
+                </div>
+                <div class="kop-text">
+                    <h3>PEMERINTAH PROVINSI DAERAH KHUSUS IBUKOTA JAKARTA</h3>
+                    <h4>DINAS SUMBER DAYA AIR</h4>
+                    <h1>Laporan Rekapitulasi Kas Keuangan</h1>
+                    <h2>{{ strtoupper($period->group->name) }}</h2>
+                    <p>Periode: <strong>{{ $period->period_name }}</strong> &bull; Status Tutup Buku: <strong>{{ strtoupper($period->status) }}</strong></p>
+                </div>
+                <div class="kop-logo">
+                    <img src="{{ asset('images/sda.png') }}" alt="Logo SDA">
+                </div>
+            </div>
         </div>
 
         {{-- Meta Info --}}

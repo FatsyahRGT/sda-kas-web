@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Kas: {{ $group->name }} — SDA Kas</title>
+    <title>Laporan Kas: {{ $group->name }} — Sikas SDA</title>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#2563eb">
     <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
@@ -30,7 +30,7 @@
             <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div class="flex items-center gap-4">
                     <div class="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-blue-50 border border-blue-100 p-2 shadow-inner">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo SDA Kas" class="h-full w-full object-contain">
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo Sikas SDA" class="h-full w-full object-contain">
                     </div>
                     <div>
                         <div class="flex flex-wrap items-center gap-2">
@@ -547,7 +547,7 @@
         {{-- Public Footer --}}
         <footer class="mt-8 text-center text-xs text-slate-400 pb-6 flex flex-col sm:flex-row items-center justify-between gap-2">
             <span>Dikelola dengan sistem transparansi kas &bull; <a href="{{ route('login') }}" class="text-blue-600 font-semibold hover:underline">Login Pengurus</a></span>
-            <span class="text-slate-400 flex items-center gap-1"><i class="bi bi-shield-check text-emerald-600"></i> Terverifikasi Sistem SDA Kas</span>
+            <span class="text-slate-400 flex items-center gap-1"><i class="bi bi-shield-check text-emerald-600"></i> Terverifikasi Sistem Sikas SDA</span>
         </footer>
 
         {{-- ========================================================================= --}}

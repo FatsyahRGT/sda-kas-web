@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login — SDA Kas Web</title>
+    <title>Login — Sikas SDA</title>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#2563eb">
     <link rel="icon" type="image/png" href="{{ asset('images/logo.png') }}">
@@ -34,19 +34,19 @@
             
             {{-- Background Graphic Container (Cleanly Fitted without overlap) --}}
             <div class="w-full max-w-lg bg-white/5 border border-white/10 rounded-3xl p-6 backdrop-blur-md shadow-2xl flex flex-col items-center justify-center">
-                <img src="{{ asset('images/bg-login.png') }}" alt="SDA DKI Jakarta" 
+                <img src="{{ asset('images/bg-login.png') }}" alt="Sikas SDA - Sistem Kas SDA" 
                      style="width: 100%; max-height: 65vh; object-fit: contain; display: block;" 
                      class="rounded-2xl">
                 
                 <div class="mt-4 text-center">
-                    <h3 class="text-white font-bold text-base tracking-wide">SISTEM MANAJEMEN KAS TERPADU</h3>
+                    <h3 class="text-white font-bold text-base tracking-wide">SIKAS SDA &bull; SISTEM KAS TERPADU</h3>
                     <p class="text-xs text-blue-300 mt-0.5">Transparan, Akurat, dan Akuntabel</p>
                 </div>
             </div>
 
             {{-- Footer info --}}
             <div class="mt-6 text-xs text-slate-400 text-center">
-                &copy; {{ date('Y') }} SDA Kas Web &bull; Kelapa Gading Jakarta Utara
+                &copy; {{ date('Y') }} Sikas SDA &bull; Kelapa Gading Jakarta Utara
             </div>
         </div>
 
@@ -57,11 +57,11 @@
                 {{-- Logo & Header --}}
                 <div class="flex flex-col items-center text-center mb-6">
                     <div style="width: 80px; height: 80px; margin-bottom: 12px; display: flex; align-items: center; justify-content: center;">
-                        <img src="{{ asset('images/logo.png') }}" alt="Logo SDA Kas" 
+                        <img src="{{ asset('images/logo.png') }}" alt="Logo Sikas SDA" 
                              style="max-width: 80px; max-height: 80px; width: auto; height: auto; object-fit: contain; display: block;">
                     </div>
                     <h2 class="text-xl sm:text-2xl font-extrabold text-slate-800 tracking-tight">Masuk ke Panel</h2>
-                    <p class="text-xs sm:text-sm text-slate-500 mt-1">Silakan masukkan kredensial akun Anda</p>
+                    <p class="text-xs sm:text-sm text-slate-500 mt-1">Sistem Kas SDA (Sikas SDA)</p>
                 </div>
 
                 {{-- Alert Error --}}
@@ -130,7 +130,7 @@
                 <div class="mt-8 pt-5 border-t border-slate-100 text-center">
                     <p class="text-xs text-slate-400" style="display: flex; align-items: center; justify-content: center; gap: 6px;">
                         <i class="bi bi-shield-lock"></i>
-                        <span>SDA Kas Web &bull; Autentikasi Terenkripsi</span>
+                        <span>Sikas SDA &bull; Autentikasi Terenkripsi</span>
                     </p>
                 </div>
             </div>

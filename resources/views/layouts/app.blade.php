@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>@yield('title', 'Dashboard') — SDA Kas Web</title>
+    <title>@yield('title', 'Dashboard') — Sikas SDA</title>
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#2563eb">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -46,10 +46,10 @@
 
     {{-- Logo --}}
     <div class="flex h-16 items-center gap-3 border-b border-slate-800 px-4 overflow-hidden">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo SDA Kas" width="36" height="36" style="width: 36px; height: 36px; max-width: 36px; max-height: 36px; object-fit: contain; flex-shrink: 0;" class="rounded-lg">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo Sikas SDA" width="36" height="36" style="width: 36px; height: 36px; max-width: 36px; max-height: 36px; object-fit: contain; flex-shrink: 0;" class="rounded-lg">
         <div class="flex flex-col min-w-0">
-            <span class="text-sm font-bold tracking-tight text-white leading-tight truncate">SDA Kas Web</span>
-            <span class="text-[11px] text-slate-400 truncate">Sistem Manajemen Kas</span>
+            <span class="text-sm font-bold tracking-tight text-white leading-tight truncate">Sikas SDA</span>
+            <span class="text-[11px] text-slate-400 truncate">Sistem Kas SDA</span>
         </div>
     </div>
 
@@ -139,7 +139,7 @@
     </main>
 
     <footer class="border-t border-slate-200 py-3.5 px-6 text-xs text-slate-400 text-center flex flex-col sm:flex-row items-center justify-between gap-2">
-        <span>SDA Kas Web &copy; {{ date('Y') }}</span>
+        <span>Sikas SDA &copy; {{ date('Y') }}</span>
         <span class="text-slate-400 flex items-center gap-1"><i class="bi bi-shield-check text-emerald-600"></i> Sistem Kas Terpadu</span>
     </footer>
 </div>

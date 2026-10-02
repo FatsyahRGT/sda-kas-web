@@ -14,7 +14,7 @@ class AuthTest extends TestCase
     {
         $response = $this->get('/login');
         $response->assertStatus(200);
-        $response->assertSee('SDA Kas Web');
+        $response->assertSee('Sikas SDA');
     }
 
     public function test_user_can_login_with_valid_credentials(): void

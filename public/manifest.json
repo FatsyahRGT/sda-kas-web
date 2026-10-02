@@ -1,6 +1,6 @@
 {
-  "name": "SDA Kas Web - Sistem Manajemen Uang Kas",
-  "short_name": "SDA Kas",
+  "name": "Sikas SDA - Sistem Kas SDA",
+  "short_name": "Sikas SDA",
   "description": "Aplikasi manajemen kas multi-grup, multi-periode, dan pemantauan tunggakan iuran anggota.",
   "start_url": "/",
   "display": "standalone",

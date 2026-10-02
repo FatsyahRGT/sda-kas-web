@@ -10,7 +10,7 @@ services:
     restart: unless-stopped
     working_dir: /var/www
     environment:
-      APP_NAME: "SDA Kas Web"
+      APP_NAME: "Sikas SDA"
       APP_ENV: production
       APP_DEBUG: "false"
       APP_URL: "http://sumber-daya-air-sikas.duckdns.org:8081"

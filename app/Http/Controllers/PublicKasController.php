@@ -2,13 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Expense;
 use App\Models\Group;
+use App\Models\Income;
+use App\Models\Member;
 use App\Models\Period;
+use App\Services\ArrearsService;
+use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class PublicKasController extends Controller
 {
-    public function show(string $slug, ?int $year = null, ?int $month = null): View
+    public function __construct(
+        protected ArrearsService $arrearsService
+    ) {}
+
+    public function show(Request $request, string $slug, ?int $year = null, ?int $month = null): View
     {
         $group = Group::where('slug', $slug)->first();
 
@@ -48,6 +57,42 @@ class PublicKasController extends Controller
             ]);
         }
 
-        return view('public.show', compact('group', 'closedPeriods', 'selectedPeriod', 'year', 'month'));
+        // Summary metrics for the public group (from all closed periods)
+        $closedPeriodIds = $closedPeriods->pluck('id');
+        $totalIncome = (float) Income::whereIn('period_id', $closedPeriodIds)->sum('nominal');
+        $totalExpense = (float) Expense::whereIn('period_id', $closedPeriodIds)->sum('nominal');
+        $totalBalance = $totalIncome - $totalExpense;
+        $totalMembers = Member::where('group_id', $group->id)->where('is_active', true)->count();
+
+        // Monthly trends for chart (up to last 12 closed periods, sorted chronologically)
+        $chartPeriods = $closedPeriods->sortBy(fn ($p) => sprintf('%04d%02d', $p->year, $p->month))->values()->take(12);
+        $chartLabels = [];
+        $chartIncome = [];
+        $chartExpense = [];
+
+        foreach ($chartPeriods as $period) {
+            $chartLabels[] = $period->period_name;
+            $chartIncome[] = (float) $period->total_income;
+            $chartExpense[] = (float) $period->total_expense;
+        }
+
+        // Arrears list for this group
+        $arrears = $this->arrearsService->getArrears($group->id);
+
+        return view('public.show', compact(
+            'group',
+            'closedPeriods',
+            'selectedPeriod',
+            'year',
+            'month',
+            'totalIncome',
+            'totalExpense',
+            'totalBalance',
+            'totalMembers',
+            'chartLabels',
+            'chartIncome',
+            'chartExpense',
+            'arrears'
+        ));
     }
 }

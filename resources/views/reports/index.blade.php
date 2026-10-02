@@ -456,7 +456,7 @@ function reportPageApp() {
 
             @if($period->group->is_public)
             msg += `\n🌐 *Cek Detail Laporan Online & Transparan:*\n`;
-            msg += `${window.location.origin}/publik/${@json($period->group->slug)}/${@json($period->year)}/${@json($period->month)}\n`;
+            msg += `${window.location.origin}/publik/${@json($period->group->slug)}\n`;
             @endif
 
             msg += `\nTerima kasih atas partisipasi dan amanah seluruh anggota 🙏`;

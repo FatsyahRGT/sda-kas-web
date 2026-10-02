@@ -230,6 +230,61 @@ document.addEventListener('DOMContentLoaded', () => {
     @endif
 });
 
+// Universal Clipboard Copy Helper (Works on both HTTP & HTTPS)
+window.copyToClipboard = function(text, successMsg = 'Teks berhasil disalin ke clipboard!') {
+    if (!text) return;
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(text).then(() => {
+            window.showCopyToast(successMsg);
+        }).catch(() => {
+            window.fallbackCopyText(text, successMsg);
+        });
+    } else {
+        window.fallbackCopyText(text, successMsg);
+    }
+};
+
+window.fallbackCopyText = function(text, successMsg) {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.top = "0";
+    textArea.style.left = "0";
+    textArea.style.position = "fixed";
+    textArea.style.opacity = "0";
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
+    try {
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        if (successful) {
+            window.showCopyToast(successMsg);
+        } else {
+            prompt("Salin teks di bawah ini secara manual (Ctrl+C):", text);
+        }
+    } catch (err) {
+        document.body.removeChild(textArea);
+        prompt("Salin teks di bawah ini secara manual (Ctrl+C):", text);
+    }
+};
+
+window.showCopyToast = function(msg) {
+    if (window.Swal) {
+        Swal.fire({
+            icon: 'success',
+            title: msg,
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2500,
+            timerProgressBar: true,
+            customClass: { popup: 'rounded-xl shadow-lg border border-slate-100' }
+        });
+    } else {
+        alert(msg);
+    }
+};
+
 // Service Worker Registration
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {

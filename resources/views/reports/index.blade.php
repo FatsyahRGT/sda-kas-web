@@ -28,12 +28,20 @@
 
             @if($period)
             <div class="flex flex-wrap items-center gap-2 pt-2 lg:pt-0">
-                {{-- Copy WhatsApp Broadcast Button --}}
-                <button type="button" @click="copyWhatsAppBroadcast()"
-                    class="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-3.5 py-2 text-xs font-bold text-white hover:bg-emerald-700 shadow-xs transition-colors">
-                    <i class="bi bi-whatsapp text-sm"></i>
-                    <span>Salin Format WA</span>
-                </button>
+                {{-- WhatsApp Actions --}}
+                <div class="inline-flex items-center rounded-xl bg-emerald-600 p-0.5 shadow-xs">
+                    <button type="button" @click="copyWhatsAppBroadcast()"
+                        class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white hover:bg-emerald-700 rounded-lg transition-colors">
+                        <i class="bi bi-clipboard-check text-sm"></i>
+                        <span>Salin Format WA</span>
+                    </button>
+                    <a :href="getWhatsAppShareUrl()" target="_blank"
+                        class="inline-flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold text-emerald-100 hover:text-white hover:bg-emerald-700/80 rounded-lg transition-colors border-l border-emerald-500/50"
+                        title="Buka Langsung di WhatsApp">
+                        <i class="bi bi-whatsapp text-sm"></i>
+                        <span>Kirim WA</span>
+                    </a>
+                </div>
 
                 {{-- Export Excel/CSV --}}
                 <a href="{{ route('reports.export-excel', $period) }}"
@@ -428,7 +436,7 @@ function reportPageApp() {
             return this.periodArrearsList.filter(m => m.member_name.toLowerCase().includes(q));
         },
 
-        copyWhatsAppBroadcast() {
+        getWhatsAppMessage() {
             @if($period)
             let msg = `📢 *LAPORAN KAS BULANAN*\n`;
             msg += `*${@json($period->group->name)}*\n`;
@@ -452,22 +460,21 @@ function reportPageApp() {
             @endif
 
             msg += `\nTerima kasih atas partisipasi dan amanah seluruh anggota 🙏`;
-
-            navigator.clipboard.writeText(msg).then(() => {
-                if (window.Swal) {
-                    Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Format WhatsApp berhasil disalin!',
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
-                } else {
-                    alert('Format pesan WhatsApp berhasil disalin!');
-                }
-            });
+            return msg;
+            @else
+            return '';
             @endif
+        },
+
+        getWhatsAppShareUrl() {
+            const msg = this.getWhatsAppMessage();
+            return `https://api.whatsapp.com/send?text=${encodeURIComponent(msg)}`;
+        },
+
+        copyWhatsAppBroadcast() {
+            const msg = this.getWhatsAppMessage();
+            if (!msg) return;
+            window.copyToClipboard(msg, 'Format WhatsApp berhasil disalin!');
         }
     };
 }

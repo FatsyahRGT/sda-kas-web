@@ -657,20 +657,7 @@ function arrearsPanel() {
                 text += `Status: LUNAS SEMUA ✓\n`;
             }
 
-            navigator.clipboard.writeText(text).then(() => {
-                if (window.Swal) {
-                    Swal.fire({
-                        toast: true,
-                        position: 'top-end',
-                        icon: 'success',
-                        title: 'Rincian tagihan disalin ke clipboard',
-                        showConfirmButton: false,
-                        timer: 2000
-                    });
-                } else {
-                    alert('Rincian tagihan disalin ke clipboard!');
-                }
-            });
+            window.copyToClipboard(text, 'Rincian tagihan disalin ke clipboard!');
         }
     };
 }

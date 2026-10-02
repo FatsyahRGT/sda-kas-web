@@ -4,12 +4,17 @@ namespace App\Http\Controllers;
 
 use App\Models\Group;
 use App\Models\Period;
+use App\Services\ArrearsService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class ReportController extends Controller
 {
+    public function __construct(
+        protected ArrearsService $arrearsService
+    ) {}
+
     public function index(Request $request): View
     {
         $groups = Group::orderBy('name')->get();
@@ -22,13 +27,38 @@ class ReportController extends Controller
 
         $selectedPeriodId = $request->filled('period_id') ? (int) $request->period_id : $periods->first()?->id;
         $period = null;
+        $categorySummary = collect();
+        $periodArrears = collect();
 
         if ($selectedPeriodId) {
             $period = Period::with(['group', 'incomes.member', 'expenses.category', 'expenses.attachments'])
                 ->find($selectedPeriodId);
+
+            if ($period) {
+                // Category subtotal summary
+                $categorySummary = $period->expenses
+                    ->groupBy(fn ($e) => $e->category->name ?? 'Tanpa Kategori')
+                    ->map(fn ($items, $name) => [
+                        'name' => $name,
+                        'total' => (float) $items->sum('nominal'),
+                        'count' => $items->count(),
+                        'percentage' => $period->total_expense > 0 ? round(($items->sum('nominal') / $period->total_expense) * 100, 1) : 0,
+                    ])->sortByDesc('total')->values();
+
+                // Members status for this specific period
+                $periodArrears = $this->arrearsService->getArrears($period->group_id, $period->id);
+            }
         }
 
-        return view('reports.index', compact('groups', 'periods', 'selectedGroupId', 'selectedPeriodId', 'period'));
+        return view('reports.index', compact(
+            'groups',
+            'periods',
+            'selectedGroupId',
+            'selectedPeriodId',
+            'period',
+            'categorySummary',
+            'periodArrears'
+        ));
     }
 
     public function exportExcel(Period $period): StreamedResponse
@@ -108,8 +138,18 @@ class ReportController extends Controller
 
     public function printPdf(Period $period): View
     {
-        $period->load(['group', 'incomes.member', 'expenses.category', 'expenses.attachments']);
+        $period->load(['group', 'incomes.member', 'expenses.category', 'expenses.attachments', 'creator']);
 
-        return view('reports.print', compact('period'));
+        // Category summary
+        $categorySummary = $period->expenses
+            ->groupBy(fn ($e) => $e->category->name ?? 'Tanpa Kategori')
+            ->map(fn ($items, $name) => [
+                'name' => $name,
+                'total' => (float) $items->sum('nominal'),
+                'count' => $items->count(),
+                'percentage' => $period->total_expense > 0 ? round(($items->sum('nominal') / $period->total_expense) * 100, 1) : 0,
+            ])->sortByDesc('total')->values();
+
+        return view('reports.print', compact('period', 'categorySummary'));
     }
 }

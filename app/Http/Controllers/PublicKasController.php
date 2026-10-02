@@ -76,8 +76,26 @@ class PublicKasController extends Controller
             $chartExpense[] = (float) $period->total_expense;
         }
 
-        // Arrears list for this group
+        // Category breakdown for doughnut chart
+        $categoryExpenses = Expense::whereIn('period_id', $closedPeriodIds)
+            ->leftJoin('expense_categories', 'expenses.category_id', '=', 'expense_categories.id')
+            ->selectRaw('COALESCE(expense_categories.name, "Tanpa Kategori") as name, SUM(expenses.nominal) as total')
+            ->groupBy('expense_categories.id', 'expense_categories.name')
+            ->orderByDesc('total')
+            ->get();
+
+        $categoryLabels = $categoryExpenses->pluck('name')->toArray();
+        $categoryData = $categoryExpenses->pluck('total')->map(fn ($v) => (float) $v)->toArray();
+
+        // Arrears list & compliance breakdown for this group
         $arrears = $this->arrearsService->getArrears($group->id);
+
+        $compliancePaidCount = $arrears->where('total_shortage', '<=', 0)->count();
+        $complianceLightCount = $arrears->where('total_shortage', '>', 0)->where('unpaid_months_count', '<=', 2)->count();
+        $complianceHeavyCount = $arrears->where('total_shortage', '>', 0)->where('unpaid_months_count', '>', 2)->count();
+
+        $complianceLabels = ['Lunas / Tertib', 'Nunggak 1-2 Bulan', 'Nunggak >2 Bulan'];
+        $complianceData = [$compliancePaidCount, $complianceLightCount, $complianceHeavyCount];
 
         return view('public.show', compact(
             'group',
@@ -92,6 +110,10 @@ class PublicKasController extends Controller
             'chartLabels',
             'chartIncome',
             'chartExpense',
+            'categoryLabels',
+            'categoryData',
+            'complianceLabels',
+            'complianceData',
             'arrears'
         ));
     }

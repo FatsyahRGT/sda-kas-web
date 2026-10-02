@@ -67,30 +67,99 @@
         </div>
     </div>
 
-    {{-- Chart --}}
-    @if(count($chartLabels) > 0)
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 mb-6">
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
-            <div>
-                <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-                    <i class="bi bi-bar-chart-fill text-blue-600"></i> Tren Pemasukan vs Pengeluaran Bulanan
-                </h2>
-                <p class="text-xs text-slate-500 mt-0.5">Perbandingan arus kas masuk dan kas keluar per periode</p>
+    {{-- Charts Grid (Tren Kas + Alokasi Kategori + Tingkat Kepatuhan) --}}
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+        {{-- Trend Chart (2 Cols) --}}
+        <div class="lg:col-span-2 bg-white rounded-2xl border border-slate-200 shadow-xs p-5 flex flex-col justify-between">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+                <div>
+                    <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                        <i class="bi bi-bar-chart-fill text-blue-600"></i> Tren Pemasukan vs Pengeluaran Bulanan
+                    </h2>
+                    <p class="text-xs text-slate-500 mt-0.5">Perbandingan arus kas masuk dan kas keluar per periode</p>
+                </div>
+                <div class="flex items-center gap-2">
+                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
+                        <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Pemasukan
+                    </span>
+                    <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
+                        <span class="h-2 w-2 rounded-full bg-red-500"></span> Pengeluaran
+                    </span>
+                </div>
             </div>
-            <div class="flex items-center gap-2">
-                <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
-                    <span class="h-2 w-2 rounded-full bg-emerald-500"></span> Pemasukan
-                </span>
-                <span class="inline-flex items-center gap-1 text-[11px] font-semibold text-slate-500 bg-slate-100 px-2.5 py-1 rounded-lg">
-                    <span class="h-2 w-2 rounded-full bg-red-500"></span> Pengeluaran
-                </span>
+            <div class="relative h-64">
+                @if(count($chartLabels) > 0)
+                    <canvas id="trendChart"></canvas>
+                @else
+                    <div class="h-full flex items-center justify-center text-xs text-slate-400">
+                        Belum ada riwayat transaksi periode kas
+                    </div>
+                @endif
             </div>
         </div>
-        <div class="relative h-64">
-            <canvas id="trendChart"></canvas>
+
+        {{-- Expense Category Breakdown (1 Col) --}}
+        <div class="bg-white rounded-2xl border border-slate-200 shadow-xs p-5 flex flex-col justify-between">
+            <div class="mb-3">
+                <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    <i class="bi bi-pie-chart-fill text-indigo-600"></i> Komposisi Pengeluaran
+                </h2>
+                <p class="text-xs text-slate-500 mt-0.5">Alokasi anggaran berdasarkan kategori</p>
+            </div>
+            <div class="relative h-56 flex items-center justify-center">
+                @if(count($categoryLabels) > 0 && array_sum($categoryData) > 0)
+                    <canvas id="categoryChart"></canvas>
+                @else
+                    <div class="text-center text-xs text-slate-400 p-4">
+                        <i class="bi bi-tag text-2xl text-slate-300 mb-1 block"></i>
+                        Belum ada data pengeluaran berkategori
+                    </div>
+                @endif
+            </div>
+            <div class="mt-3 pt-3 border-t border-slate-100 text-center">
+                <span class="text-[11px] text-slate-400 font-medium">Total: Rp {{ number_format($totalExpense, 0, ',', '.') }}</span>
+            </div>
         </div>
     </div>
-    @endif
+
+    {{-- Compliance Stats Bar --}}
+    <div class="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs mb-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div>
+                <h2 class="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    <i class="bi bi-shield-check text-emerald-600"></i> Rasio Kepatuhan Iuran Kas Anggota
+                </h2>
+                <p class="text-xs text-slate-500 mt-0.5">Proporsi anggota yang tertib lunas vs menunggak iuran</p>
+            </div>
+            <div class="flex items-center gap-2 text-xs">
+                <span class="inline-flex items-center gap-1.5 font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200">
+                    <span class="h-2 w-2 rounded-full bg-emerald-500"></span> {{ $complianceData[0] ?? 0 }} Lunas
+                </span>
+                <span class="inline-flex items-center gap-1.5 font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
+                    <span class="h-2 w-2 rounded-full bg-amber-500"></span> {{ $complianceData[1] ?? 0 }} Nunggak 1-2 Bln
+                </span>
+                <span class="inline-flex items-center gap-1.5 font-bold text-red-700 bg-red-50 px-2.5 py-1 rounded-lg border border-red-200">
+                    <span class="h-2 w-2 rounded-full bg-red-500"></span> {{ $complianceData[2] ?? 0 }} Nunggak >2 Bln
+                </span>
+            </div>
+        </div>
+
+        @php
+            $totalMembersCount = array_sum($complianceData) ?: 1;
+            $paidPct = round((($complianceData[0] ?? 0) / $totalMembersCount) * 100, 1);
+            $lightPct = round((($complianceData[1] ?? 0) / $totalMembersCount) * 100, 1);
+            $heavyPct = round((($complianceData[2] ?? 0) / $totalMembersCount) * 100, 1);
+        @endphp
+        <div class="h-3 w-full bg-slate-100 rounded-full overflow-hidden flex shadow-inner">
+            <div style="width: {{ $paidPct }}%" class="bg-emerald-500 h-full transition-all duration-500" title="Lunas: {{ $paidPct }}%"></div>
+            <div style="width: {{ $lightPct }}%" class="bg-amber-400 h-full transition-all duration-500" title="Nunggak 1-2 Bulan: {{ $lightPct }}%"></div>
+            <div style="width: {{ $heavyPct }}%" class="bg-red-500 h-full transition-all duration-500" title="Nunggak >2 Bulan: {{ $heavyPct }}%"></div>
+        </div>
+        <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium mt-1.5">
+            <span>Tingkat Kepatuhan Organisasi: <strong class="text-slate-700">{{ $paidPct }}% Lunas</strong></span>
+            <span>Total: {{ $totalMembers }} Anggota</span>
+        </div>
+    </div>
 
     {{-- Arrears Panel (Monitoring Tunggakan & Pembayaran) --}}
     <div class="bg-white rounded-2xl border border-slate-200 shadow-xs overflow-hidden mb-6">
@@ -391,50 +460,97 @@
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <script>
+// 1. Monthly Trend Bar Chart
 @if(count($chartLabels) > 0)
-const ctx = document.getElementById('trendChart').getContext('2d');
-new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: @json($chartLabels),
-        datasets: [
-            {
-                label: 'Pemasukan',
-                data: @json($chartIncome),
-                backgroundColor: 'rgba(16, 185, 129, 0.85)',
-                borderRadius: 8,
-            },
-            {
-                label: 'Pengeluaran',
-                data: @json($chartExpense),
-                backgroundColor: 'rgba(239, 68, 68, 0.85)',
-                borderRadius: 8,
-            }
-        ]
-    },
-    options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-            legend: { display: false },
-            tooltip: {
-                callbacks: {
-                    label: (ctx) => ' ' + ctx.dataset.label + ': Rp ' + new Intl.NumberFormat('id-ID').format(ctx.raw)
+const trendCanvas = document.getElementById('trendChart');
+if (trendCanvas) {
+    const ctx = trendCanvas.getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: @json($chartLabels),
+            datasets: [
+                {
+                    label: 'Pemasukan',
+                    data: @json($chartIncome),
+                    backgroundColor: 'rgba(16, 185, 129, 0.85)',
+                    borderRadius: 8,
+                },
+                {
+                    label: 'Pengeluaran',
+                    data: @json($chartExpense),
+                    backgroundColor: 'rgba(239, 68, 68, 0.85)',
+                    borderRadius: 8,
                 }
-            }
+            ]
         },
-        scales: {
-            y: {
-                beginAtZero: true,
-                ticks: {
-                    callback: (val) => 'Rp ' + new Intl.NumberFormat('id-ID').format(val),
-                    font: { size: 10 }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => ' ' + ctx.dataset.label + ': Rp ' + new Intl.NumberFormat('id-ID').format(ctx.raw)
+                    }
                 }
             },
-            x: { ticks: { font: { size: 10 } } }
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: (val) => 'Rp ' + new Intl.NumberFormat('id-ID').format(val),
+                        font: { size: 10 }
+                    }
+                },
+                x: { ticks: { font: { size: 10 } } }
+            }
         }
-    }
-});
+    });
+}
+@endif
+
+// 2. Expense Category Doughnut Chart
+@if(count($categoryLabels) > 0 && array_sum($categoryData) > 0)
+const catCanvas = document.getElementById('categoryChart');
+if (catCanvas) {
+    const catCtx = catCanvas.getContext('2d');
+    new Chart(catCtx, {
+        type: 'doughnut',
+        data: {
+            labels: @json($categoryLabels),
+            datasets: [{
+                data: @json($categoryData),
+                backgroundColor: [
+                    '#3b82f6', '#10b981', '#f59e0b', '#ec4899', '#8b5cf6',
+                    '#06b6d4', '#f97316', '#64748b', '#14b8a6', '#6366f1'
+                ],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 10,
+                        padding: 10,
+                        font: { size: 10 }
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: (ctx) => ' ' + ctx.label + ': Rp ' + new Intl.NumberFormat('id-ID').format(ctx.raw)
+                    }
+                }
+            },
+            cutout: '68%'
+        }
+    });
+}
 @endif
 
 function rupiahFormat(num) {
@@ -519,7 +635,7 @@ function arrearsPanel() {
                 msg += `- ${p.period_name}: Kurang Rp ${new Intl.NumberFormat('id-ID').format(p.shortage)}\n`;
             });
 
-            msg += `\nMohon untuk segera melakukan pembayaran atau konfirmasi kepada pengurus. Terima kasih banyak 🙏`;
+            msg += `\nMohon untuk segera melakukan konfirmasi atau pembayaran kepada pengurus. Terima kasih banyak 🙏`;
 
             return `https://wa.me/${phone}?text=${encodeURIComponent(msg)}`;
         },

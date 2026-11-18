@@ -57,8 +57,6 @@ services:
     image: nginx:alpine
     container_name: sda_kas_webserver
     restart: unless-stopped
-    ports:
-      - "8081:80"
     volumes:
       - .:/var/www
       - storage_data:/var/www/public/storage
